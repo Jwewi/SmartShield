@@ -22,7 +22,7 @@ model = AutoModelForMaskedLM.from_pretrained("jackaduma/SecBERT", trust_remote_c
 pipe = pipeline("fill-mask", model=model, tokenizer=tokenizer)
 
 # Load the dataset
-dataset_path = '../datasets/your_dataset.csv'  # Update with the correct relative path to your CSV file
+dataset_path = '../dataset/cleaned_dataset.xls'  # Update with the correct relative path to your CSV file
 df = pd.read_csv(dataset_path)
 print(df.head())  # Display the first few rows of the dataset
 
