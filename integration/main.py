@@ -21,9 +21,16 @@ model = AutoModelForMaskedLM.from_pretrained("jackaduma/SecBERT", trust_remote_c
 # Use the pipeline with SecBERT model
 pipe = pipeline("fill-mask", model=model, tokenizer=tokenizer)
 
-# Load the dataset
-dataset_path = '../dataset/cleaned_dataset.xls'  # Update with the correct relative path to your CSV file
-df = pd.read_csv(dataset_path)
+# Load the dataset from .xls file
+dataset_path_xls = '../datasets/cleaned_dataset.xls'  # Ensure the path is correct
+df = pd.read_excel(dataset_path_xls)
+
+# Convert and save the DataFrame as a .csv file
+dataset_path_csv = '../datasets/cleaned_dataset.csv'  # Ensure the path is correct
+df.to_csv(dataset_path_csv, index=False)
+
+# Load the dataset from the newly saved .csv file
+df = pd.read_csv(dataset_path_csv)
 print(df.head())  # Display the first few rows of the dataset
 
 # Create a new DataFrame to store predictions and responses
@@ -47,4 +54,5 @@ for index, row in df.iterrows():
 print(predictions_df.head())
 
 # Save the predictions and responses to a separate CSV file
-predictions_df.to_csv('../dataset/predictions_responses.csv', index=False)
+predictions_file_path = '../datasets/predictions_responses.csv'  # Ensure the path is correct
+predictions_df.to_csv(predictions_file_path, index=False)
