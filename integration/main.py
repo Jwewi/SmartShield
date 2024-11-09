@@ -3,6 +3,10 @@ import logging
 import pandas as pd
 from transformers import pipeline, AutoTokenizer, AutoModelForMaskedLM, logging as transformers_logging
 from response_generation import generate_response
+from azure.loganalytics import LogAnalyticsDataClient
+from azure.loganalytics.models import QueryBody
+from azure.identity import DefaultAzureCredential
+import json
 
 # Suppress specific warnings
 warnings.filterwarnings("ignore", message="BertForMaskedLM has generative capabilities")
@@ -32,10 +36,12 @@ print("Columns in the dataset:", df.columns)
 # Create a new DataFrame to store predictions and responses
 predictions_df = pd.DataFrame(columns=['Context', 'Prediction', 'Response'])
 
+# Ensure 'context' column exists in the DataFrame
+if 'context' not in df.columns:
+    df['context'] = ''  # Initialize the 'context' column with empty strings or appropriate default values
+
 # Iterate through the dataset and make predictions
 for index, row in df.iterrows():
-    if 'context' not in df.columns:
-        raise KeyError("The column 'context' is not found in the dataset.")
     sample_text = f"{row['context']} [MASK]."  # Adjust this line to match your dataset structure
     results = pipe(sample_text)
     if results:
@@ -53,3 +59,26 @@ print(predictions_df.head())
 
 # Save the predictions and responses to a separate CSV file
 predictions_df.to_csv('../dataset/cleaned_datasetresponses.csv', index=False)
+
+# Send data to Microsoft Sentinel
+workspace_id = 'your_workspace_id'  # Replace with your Log Analytics workspace ID
+primary_key = 'your_primary_key'  # Replace with your Log Analytics primary key
+
+# Create a client
+client = LogAnalyticsDataClient(credential=DefaultAzureCredential())
+
+# Prepare the data to send
+data = predictions_df.to_dict(orient='records')
+body = json.dumps(data)
+
+# Send the data
+response = client.query(workspace_id, QueryBody(query=body))
+print(response)
+
+def main():
+    # Main function to run the integration
+    # ...implementation...
+    pass
+
+if __name__ == "__main__":
+    main()
