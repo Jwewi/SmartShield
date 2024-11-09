@@ -26,11 +26,16 @@ dataset_path = '../dataset/cleaned_dataset.csv'  # Update with the correct relat
 df = pd.read_csv(dataset_path)
 print(df.head())  # Display the first few rows of the dataset
 
+# Check the column names
+print("Columns in the dataset:", df.columns)
+
 # Create a new DataFrame to store predictions and responses
 predictions_df = pd.DataFrame(columns=['Context', 'Prediction', 'Response'])
 
 # Iterate through the dataset and make predictions
 for index, row in df.iterrows():
+    if 'context' not in df.columns:
+        raise KeyError("The column 'context' is not found in the dataset.")
     sample_text = f"{row['context']} [MASK]."  # Adjust this line to match your dataset structure
     results = pipe(sample_text)
     if results:
