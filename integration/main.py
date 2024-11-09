@@ -18,9 +18,9 @@ logging.basicConfig(filename='model_output.log', level=logging.INFO)
 # Set transformers logging to ERROR to suppress detailed warnings
 transformers_logging.set_verbosity_error()
 
-# Load tokenizer and model using auto classes
-tokenizer = AutoTokenizer.from_pretrained("jackaduma/SecBERT", trust_remote_code=True)
+# Load the model and tokenizer
 model = AutoModelForMaskedLM.from_pretrained("jackaduma/SecBERT", trust_remote_code=True)
+tokenizer = AutoTokenizer.from_pretrained("jackaduma/SecBERT", trust_remote_code=True)
 
 # Use the pipeline with SecBERT model
 pipe = pipeline("fill-mask", model=model, tokenizer=tokenizer)
@@ -61,8 +61,8 @@ print(predictions_df.head())
 predictions_df.to_csv('../dataset/cleaned_datasetresponses.csv', index=False)
 
 # Send data to Microsoft Sentinel
-workspace_id = 'your_workspace_id'  # Replace with your Log Analytics workspace ID
-primary_key = 'your_primary_key'  # Replace with your Log Analytics primary key
+workspace_id = '8907f303-1f30-422f-8f86-6634cb28bcc6'  # Replace with your Log Analytics workspace ID
+primary_key = 'C6MN0Q8X3FPLniqCQ13pfKJLSSfP8MRY90d0VTenECxoOllvbvZhoiPZflxOBFToGy4xoHt6f5bA2d6rz29akA=='  # Replace with your Log Analytics primary key
 
 # Create a client
 client = LogAnalyticsDataClient(credential=DefaultAzureCredential())
@@ -74,11 +74,3 @@ body = json.dumps(data)
 # Send the data
 response = client.query(workspace_id, QueryBody(query=body))
 print(response)
-
-def main():
-    # Main function to run the integration
-    # ...implementation...
-    pass
-
-if __name__ == "__main__":
-    main()
