@@ -47,4 +47,4 @@ for index, row in df.iterrows():
 print(predictions_df.head())
 
 # Save the predictions and responses to a separate CSV file
-predictions_df.to_csv('../datasets/predictions_responses.csv', index=False)
+predictions_df.to_csv('../dataset/predictions_responses.csv', index=False)
