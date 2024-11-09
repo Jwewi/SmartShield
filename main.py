@@ -31,4 +31,3 @@ for result in results:
     logging.info(f"Detected Threat: {threat_type}, Recommended Response: {response}")
     print(f"Detected Threat: {threat_type}, Recommended Response: {response}")
 
-# Load the dataset df = pd.read_csv('path_to_your_dataset.csv') # Update with the correct path to your CSV file print(df.head()) # Display the first few rows of the dataset
